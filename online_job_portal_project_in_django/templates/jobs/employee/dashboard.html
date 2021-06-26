@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block content %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <h2 class="heading">dashboard</h2>
+                    <h3 class="heading">Job, You have applied to</h3>
+                </div>
+            </div>
+        </div>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-client-dashboard">
+                            <thead>
+                            <tr>
+                                <th>Job title</th>
+                                <th>Data of Posting</th>
+                                <th>Last Date</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for job in jobs %}
+
+                                <tr>
+                                    <th><a href="{% url 'jobs:jobs-detail' job.id %}">{{ job }}</a>
+                                    </th>
+                                    <td>{{ job.created_at }}</td>
+                                    <td>{{ job.last_date }}</td>
+                                    <!-- <td>
+                                        <br>
+                                        {% if job.filled %}
+                                            <a href="{% url 'jobs:job-mark-filled' job.id %}"
+                                               class="btn btn-outline-white-secondary">
+                                                <i class="fa fa-check-circle-o"></i>
+                                                <span class="hidden-xs hidden-sm">Filled</span>
+                                            </a><br>
+                                        {% else %}
+                                            <a href="{% url 'jobs:job-mark-filled' job.id %}"
+                                               class="btn btn-outline-white-secondary">
+                                                <i class="fa fa-check-circle-o"></i>
+                                                <span class="hidden-xs hidden-sm">Cancel Application </span>
+                                            </a><br>
+                                        {% endif %}
+                                    </td> -->
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

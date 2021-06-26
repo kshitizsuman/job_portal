@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load is_already_applied %}
+{% block title %}
+    Job details
+{% endblock %}
+
+{% block content %}
+
+        <div class="container">
+            <h1 class="heading">{{ job.title }}<br>
+                <small> {{ job.company_name }}</small><br>
+            </h1>
+        </div>
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3>{{ job.category }}{% if job.type == '1' %}
+                        <span class="badge featured-badge badge-success">Full time</span>
+                    {% elif job.type == '2' %}
+                        <span class="badge featured-badge badge-primary">Part time</span>
+                    {% else %}
+                        <span style="color: #ffffff;" class="badge featured-badge badge-warning">Internship</span>
+                    {% endif %}</h3>
+                    <h5> Location :: {{ job.location }}</h5>
+                    <h5>Last date: {{ job.last_date|date }}</h5>
+                    <h5><a href="{{ job.website }}"> Website</a></h5>
+                    <h5 class="text-info">Salary: Negotiable</h5>
+                    <blockquote class="blockquote">
+                        <p>{{ job.description }}</p>
+                    </blockquote>
+                    <div class="job-detail__apply-bottom">
+                        {% if request.user.is_authenticated %}
+                            {% if request.user.role == "employee" %}
+                                {% is_already_applied job request.user as is_applied %}
+                                {% if is_applied %}
+                                    <input type="button" class="btn btn-outline-white-primary" value="Already applied"/>
+                                {% else %}
+                                    <form action="{% url 'jobs:apply-job' job.id %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="job" value="{{ job.id }}">
+                                        <input type="submit" class="btn btn-success"
+                                            value="Apply for this job"/>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            <form action="{% url 'jobs:apply-job' job.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="job" value="{{ job.id }}">
+                                <input type="submit" class="btn btn-success"
+                                       value="Apply for this job"/>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- <div class="col-lg-1"></div>
+                <div class="col-lg-3">
+                    <h4>About {{ job.company_name }}</h4>
+                    <p class="job-detail__company-description">{{ job.company_description }}</p>
+                    <p class="job-detail__social social social--outline">
+                        <a href="{{ job.website }}" data-toggle="tooltip" data-placement="top" title="Website"
+                           class="link">
+                            <i class="fa fa-link"></i>
+                        </a>
+                    </p>
+                    <div class="job-detail__apply-top">
+                        {% if is_applied %}
+                            <input type="button" class="btn btn-outline-white-primary" value="Already applied"/>
+                        {% else %}
+                            <form action="{% url 'jobs:apply-job' job.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="job" value="{{ job.id }}">
+                                <input type="submit" class="btn btn-success" value="Apply for this job"/>
+                            </form>
+                        {% endif %}
+                    </div> 
+                </div> -->
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
